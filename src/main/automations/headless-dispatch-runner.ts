@@ -25,6 +25,7 @@ export type HeadlessAutomationDispatchContext = {
   automation: Automation
   run: AutomationRun
   target: Extract<AutomationRunTargetResult, { ok: true }>
+  agentPrompt?: string
   dispatcher: HeadlessAutomationDispatcher
   runs: AutomationRunWriter
   runPrecheck: () => Promise<AutomationPrecheckResult | null>
@@ -68,7 +69,7 @@ export async function runHeadlessAutomationDispatch(
   // The agent can finish before launch returns.
   const dispatchedAt = Date.now()
   try {
-    launch = await ctx.dispatcher({ automation, run, target })
+    launch = await ctx.dispatcher({ automation, run, target, agentPrompt: ctx.agentPrompt })
   } catch (error) {
     const refusal =
       error instanceof AutomationDispatchRefusedError

@@ -248,6 +248,8 @@ export type AutomationDispatchRequest = {
   automation: Automation
   run: AutomationRun
   dispatchToken: string
+  /** The saved prompt with Orca's run instructions; absent means send the saved prompt. */
+  agentPrompt?: string
 }
 
 export type AutomationDispatchResult = {
@@ -268,6 +270,7 @@ export type AutomationDispatchResult = {
   errorParams?: Record<string, string | number> | null
   /** With `dispatched`: when the agent was handed the run, if not now. */
   dispatchedAt?: number
+  resultReporting?: 'offered'
 }
 
 export type ExternalAutomationProvider = 'openclaw'

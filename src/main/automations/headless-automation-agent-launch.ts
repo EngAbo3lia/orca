@@ -33,11 +33,15 @@ export async function launchHeadlessAutomationAgent(
     run: Pick<AutomationRun, 'id' | 'title' | 'scheduledFor' | 'trigger'>
     target: Extract<AutomationRunTargetResult, { ok: true }>
     runs: readonly AutomationRun[]
+    agentPrompt?: string
   }
 ): Promise<HeadlessAutomationAgentLaunch> {
   const { automation, run, target } = request
   const agent = automation.agentId
+  // An empty saved prompt still launches the agent without a turn.
   const text = automation.prompt?.trim()
+    ? (request.agentPrompt ?? automation.prompt).trim()
+    : undefined
   if (automation.reuseSession && automation.workspaceMode === 'existing' && text) {
     const reused = await sendToReusableSession(runtime, { ...request, text })
     if (reused) {

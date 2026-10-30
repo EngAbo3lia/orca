@@ -26,6 +26,7 @@ export type AutomationChatLaunchRequest = {
   run: Pick<AutomationRun, 'id' | 'title' | 'scheduledFor' | 'createdAt'>
   target: Extract<AutomationRunTargetResult, { ok: true }>
   runs: readonly AutomationRun[]
+  agentPrompt?: string
 }
 
 export async function launchAutomationChatAgent(
@@ -65,7 +66,7 @@ async function launchChat(
         operationId,
         surface: 'chat',
         presentation: 'background',
-        prompt: { text: automation.prompt, delivery: 'submit' },
+        prompt: { text: request.agentPrompt ?? automation.prompt, delivery: 'submit' },
         target:
           automation.workspaceMode === 'existing'
             ? { kind: 'existing', worktree: `id:${automation.workspaceId}` }

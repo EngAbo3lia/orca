@@ -29,6 +29,8 @@ export type HeadlessAutomationDispatcher = (request: {
   automation: Automation
   run: AutomationRun
   target: Extract<AutomationRunTargetResult, { ok: true }>
+  /** The saved prompt with Orca's run instructions; absent means send the saved prompt. */
+  agentPrompt?: string
 }) => Promise<HeadlessAutomationDispatchLaunch>
 
 export class AutomationRunLaunchError extends Error {

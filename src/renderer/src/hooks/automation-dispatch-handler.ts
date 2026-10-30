@@ -30,7 +30,8 @@ function acquireReuseDispatchTab(tabId: string): (() => void) | null {
 export async function handleAutomationDispatchRequest({
   automation,
   run,
-  dispatchToken
+  dispatchToken,
+  agentPrompt = automation.prompt
 }: AutomationDispatchRequest): Promise<void> {
   const markDispatchResult = async (result: AutomationDispatchResult): Promise<void> => {
     // The writer publishes host-scoped change before reply; another unscoped emit would invalidate every host.
@@ -110,7 +111,7 @@ export async function handleAutomationDispatchRequest({
             const submitted = await submitPromptToAgentPty({
               tabId: reusableSession.tabId,
               ptyId: reusableSession.ptyId,
-              content: automation.prompt
+              content: agentPrompt
             })
             if (!submitted) {
               completion.cleanupRunObservers()
@@ -166,7 +167,7 @@ export async function handleAutomationDispatchRequest({
     const result = await launchAgentBackgroundSession({
       agent: automation.agentId,
       worktreeId: worktree.id,
-      prompt: automation.prompt,
+      prompt: agentPrompt,
       ...(automation.extraAgentArgs ? { extraAgentArgs: automation.extraAgentArgs } : {}),
       launchSource: 'unknown',
       title: run.title,

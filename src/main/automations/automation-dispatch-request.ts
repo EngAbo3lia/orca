@@ -28,6 +28,8 @@ import {
 } from '../../shared/automation-run-failure-copy'
 import { isOrcadFencedAutomation, ORCAD_FENCED_AUTOMATION } from './orcad-fenced-automation'
 import { AutomationDispatchCancelledError } from './automation-dispatch-cancelled-error'
+import { automationAgentPrompt, automationRunReportingCli } from './automation-run-preamble'
+import { getLocalProjectWorktreeGitOptions } from '../project-runtime-git-options'
 
 export type AutomationRendererChannel = Pick<WebContents, 'isDestroyed' | 'send'>
 
@@ -136,10 +138,17 @@ export async function requestAutomationDispatch(
   if (stopped) {
     return refuse(stopped)
   }
+  const dispatchTarget = target
+  const reportingCli = automationRunReportingCli(
+    dispatchTarget,
+    () => getLocalProjectWorktreeGitOptions(ctx.store, dispatchTarget.repo).wslDistro
+  )
+  const agentPrompt = automationAgentPrompt(automation.prompt, reportingCli)
   await ctx.runs.updateRun({
     runId: run.id,
     status: 'dispatching',
     workspaceId: automation.workspaceId,
+    ...(reportingCli ? { resultReporting: 'offered' as const } : {}),
     error: null
   })
 
@@ -160,7 +169,8 @@ export async function requestAutomationDispatch(
       {
         automation,
         run,
-        dispatchToken: createAutomationDispatchToken(automation.id, run.id)
+        dispatchToken: createAutomationDispatchToken(automation.id, run.id),
+        agentPrompt
       },
       ctx.runs,
       run
@@ -175,6 +185,7 @@ export async function requestAutomationDispatch(
     automation,
     run,
     target,
+    agentPrompt,
     dispatcher: (request) => {
       if (readRun().status !== 'dispatching') {
         throw new AutomationDispatchCancelledError('The run changed before its agent could launch.')
