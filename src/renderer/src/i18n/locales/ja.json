@@ -17147,7 +17147,8 @@
           "runStatusSkippedMissed": "スキップ済み",
           "runStatusSkippedUnavailable": "利用不可",
           "runStatusSkippedNeedsInteractiveAuth": "認証情報が必要",
-          "runStatusDispatchFailed": "失敗"
+          "runStatusDispatchFailed": "失敗",
+          "runStatusCompletedWithWarnings": "警告ありで完了"
         },
         "runContent": {
           "noOutput": "出力内容はありません。"
@@ -17186,6 +17187,20 @@
         },
         "hostSummary": {
           "partialFailureOfHosts_other": "{{count}} 台中 {{failed}} 台のホストを読み込めませんでした"
+        },
+        "automationRunOutputActions": {
+          "saveFailed": "'{{title}}' を保存できませんでした。"
+        },
+        "AutomationRunResults": {
+          "download": "ダウンロード",
+          "evidence": "詳細",
+          "noWarningsReported": "警告は報告されていません。",
+          "open": "開く",
+          "outputs": "出力",
+          "previewUnavailable": "このファイルはホスト上で利用できなくなりました。",
+          "resolved": "解決済み",
+          "resolvedWith": "解決済み: {{resolution}}",
+          "warnings": "警告"
         }
       },
       "agent": {

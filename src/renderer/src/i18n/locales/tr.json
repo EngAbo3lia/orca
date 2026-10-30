@@ -17666,7 +17666,8 @@
           "runStatusSkippedMissed": "Atlandı",
           "runStatusSkippedUnavailable": "Kullanılamıyor",
           "runStatusSkippedNeedsInteractiveAuth": "Kimlik bilgileri gerekli",
-          "runStatusDispatchFailed": "Başarısız"
+          "runStatusDispatchFailed": "Başarısız",
+          "runStatusCompletedWithWarnings": "Uyarılarla tamamlandı"
         },
         "runContent": {
           "noOutput": "Çıktı içeriği yok."
@@ -17707,6 +17708,20 @@
         "hostSummary": {
           "partialFailureOfHosts_one": "{{count}} sunucudan {{failed}} tanesi yüklenemedi",
           "partialFailureOfHosts_other": "{{count}} sunucudan {{failed}} tanesi yüklenemedi"
+        },
+        "automationRunOutputActions": {
+          "saveFailed": "'{{title}}' kaydedilemedi."
+        },
+        "AutomationRunResults": {
+          "download": "İndir",
+          "evidence": "Ayrıntılar",
+          "noWarningsReported": "Bildirilen uyarı yok.",
+          "open": "Aç",
+          "outputs": "Çıktılar",
+          "previewUnavailable": "Bu dosya artık ana makinede mevcut değil.",
+          "resolved": "Çözüldü",
+          "resolvedWith": "Çözüldü: {{resolution}}",
+          "warnings": "Uyarılar"
         }
       },
       "agent": {

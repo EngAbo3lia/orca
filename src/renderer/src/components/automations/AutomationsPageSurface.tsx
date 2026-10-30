@@ -11,6 +11,7 @@ import { AutomationsPageTopBar } from './AutomationsPageTopBar'
 import type { AutomationsPageController } from './use-automations-page-controller'
 import { AutomationRunsDashboardSurface } from './AutomationRunsDashboardSurface'
 import { AutomationRunDetailsPage } from './AutomationRunDetailsPage'
+import { createAutomationRunOutputActions } from './automation-run-output-actions'
 import { AutomationsPageDeleteDialogs } from './AutomationsPageDeleteDialogs'
 import { AutomationsPageListPanel } from './AutomationsPageListPanel'
 export function AutomationsPageSurface({
@@ -96,6 +97,19 @@ export function AutomationsPageSurface({
       })
     )
   }, [repoForRow, selectedRow, setup.selectedRuns, worktreeForRow, worktreeMap])
+  const selectedRunAuthority = selectedRow?.catalogRef?.authority
+  const selectedRunId = selectedAutomationRunPage?.id
+  // Stable per run so open previews don't refetch on every render.
+  const selectedRunOutputActions = useMemo(
+    () =>
+      createAutomationRunOutputActions(
+        selectedRunAuthority
+          ? getAutomationAuthorityTarget(selectedRunAuthority)
+          : { kind: 'local' },
+        selectedRunId ?? ''
+      ),
+    [selectedRunAuthority, selectedRunId]
+  )
   const runSelectedRowAction = (action: (row: AutomationListRow) => void): void => {
     if (selectedRow) {
       action(selectedRow)
@@ -259,6 +273,7 @@ export function AutomationsPageSurface({
           }
           onOpenWorkspace={() => openRunWorkspace(selectedAutomationRunPage)}
           onBack={runPageOrigin === 'automation' ? showAutomationDetails : showRunsDashboard}
+          outputActions={selectedRunOutputActions}
         />
       ) : pageView === 'run' ? (
         <AutomationsPageSkeleton />

@@ -17975,7 +17975,8 @@
           "runStatusSkippedMissed": "Skipped",
           "runStatusSkippedUnavailable": "Unavailable",
           "runStatusSkippedNeedsInteractiveAuth": "Needs credentials",
-          "runStatusDispatchFailed": "Failed"
+          "runStatusDispatchFailed": "Failed",
+          "runStatusCompletedWithWarnings": "Done with warnings"
         },
         "runContent": {
           "noOutput": "No output content available."
@@ -18016,6 +18017,20 @@
         "hostSummary": {
           "partialFailureOfHosts_one": "{{failed}} of {{count}} host could not be loaded",
           "partialFailureOfHosts_other": "{{failed}} of {{count}} hosts could not be loaded"
+        },
+        "automationRunOutputActions": {
+          "saveFailed": "Couldn't save '{{title}}'."
+        },
+        "AutomationRunResults": {
+          "download": "Download",
+          "evidence": "Details",
+          "noWarningsReported": "No warnings reported.",
+          "open": "Open",
+          "outputs": "Outputs",
+          "previewUnavailable": "This file is no longer available on the host.",
+          "resolved": "Resolved",
+          "resolvedWith": "Resolved: {{resolution}}",
+          "warnings": "Warnings"
         }
       },
       "agent": {

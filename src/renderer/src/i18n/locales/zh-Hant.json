@@ -17442,7 +17442,8 @@
           "runStatusSkippedMissed": "已略過",
           "runStatusSkippedUnavailable": "無法使用",
           "runStatusSkippedNeedsInteractiveAuth": "需要憑證",
-          "runStatusDispatchFailed": "失敗"
+          "runStatusDispatchFailed": "失敗",
+          "runStatusCompletedWithWarnings": "已完成（有警告）"
         },
         "runContent": {
           "noOutput": "沒有可用的輸出內容。"
@@ -17481,6 +17482,20 @@
         },
         "hostSummary": {
           "partialFailureOfHosts_other": "{{count}} 台主機中有 {{failed}} 台無法載入"
+        },
+        "automationRunOutputActions": {
+          "saveFailed": "無法儲存「{{title}}」。"
+        },
+        "AutomationRunResults": {
+          "download": "下載",
+          "evidence": "詳細資料",
+          "noWarningsReported": "未回報警告。",
+          "open": "開啟",
+          "outputs": "輸出",
+          "previewUnavailable": "此檔案在主機上已無法使用。",
+          "resolved": "已解決",
+          "resolvedWith": "已解決：{{resolution}}",
+          "warnings": "警告"
         }
       },
       "agent": {

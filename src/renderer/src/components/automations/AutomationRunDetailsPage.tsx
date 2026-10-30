@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 import { translate } from '@/i18n/i18n'
 import type { Automation, AutomationRun } from '../../../../shared/automations-types'
 import { AutomationRunPageFrame } from './AutomationRunPageFrame'
+import { AutomationRunResults, type AutomationRunOutputActions } from './AutomationRunResults'
 import { getAutomationRunContent } from './automation-run-content'
 import { automationRunErrorText } from './automation-run-error-copy'
 import type { AutomationRunViewState } from './automation-run-view-state'
@@ -14,7 +15,8 @@ import {
   AutomationRunErrorNotice,
   formatAutomationDateTimeWithRelative,
   getAutomationRunStatusLabel,
-  getAutomationRunStatusVariant
+  getAutomationRunStatusVariant,
+  hasOpenAutomationRunWarnings
 } from './automation-page-parts'
 
 export function AutomationRunDetailsPage({
@@ -27,7 +29,8 @@ export function AutomationRunDetailsPage({
   isRerunPending,
   onRerun,
   onOpenWorkspace,
-  onBack
+  onBack,
+  outputActions
 }: {
   automation: Automation | null
   run: AutomationRun
@@ -39,6 +42,7 @@ export function AutomationRunDetailsPage({
   onRerun: () => void
   onOpenWorkspace: () => void
   onBack: () => void
+  outputActions: AutomationRunOutputActions
 }): React.JSX.Element {
   const content = getAutomationRunContent(run)
   const errorText = automationRunErrorText(run)
@@ -60,8 +64,8 @@ export function AutomationRunDetailsPage({
               )
             : null
         }
-        statusLabel={getAutomationRunStatusLabel(run.status)}
-        statusVariant={getAutomationRunStatusVariant(run.status)}
+        statusLabel={getAutomationRunStatusLabel(run.status, hasOpenAutomationRunWarnings(run))}
+        statusVariant={getAutomationRunStatusVariant(run.status, hasOpenAutomationRunWarnings(run))}
         actions={
           <>
             {canRerun && automation ? (
@@ -95,6 +99,7 @@ export function AutomationRunDetailsPage({
             error={errorText}
           />
         ) : null}
+        <AutomationRunResults className="mb-4" run={run} actions={outputActions} />
         <CommentMarkdown
           variant="document"
           content={content}

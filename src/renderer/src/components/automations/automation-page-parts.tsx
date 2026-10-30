@@ -55,9 +55,19 @@ export function formatAutomationDateTimeWithRelative(
   return relative ? `${absolute} (${relative})` : absolute
 }
 
+/** A clean finish whose agent reported missing work; recovered warnings don't count. */
+export function hasOpenAutomationRunWarnings(run: Pick<AutomationRun, 'warnings'>): boolean {
+  return (run.warnings ?? []).some((warning) => warning.resolvedAt === null)
+}
+
 export function getAutomationRunStatusVariant(
-  status: AutomationRun['status']
+  status: AutomationRun['status'],
+  hasOpenWarnings = false
 ): React.ComponentProps<typeof Badge>['variant'] {
+  // Monochrome emphasis: the warning reads as a quieter outline, never a tint.
+  if (status === 'completed' && hasOpenWarnings) {
+    return 'outline'
+  }
   if (status === 'dispatched' || status === 'completed') {
     return 'secondary'
   }
@@ -70,7 +80,16 @@ export function getAutomationRunStatusVariant(
   return 'dot'
 }
 
-export function getAutomationRunStatusLabel(status: AutomationRun['status']): string {
+export function getAutomationRunStatusLabel(
+  status: AutomationRun['status'],
+  hasOpenWarnings = false
+): string {
+  if (status === 'completed' && hasOpenWarnings) {
+    return translate(
+      'auto.components.automations.automationPageParts.runStatusCompletedWithWarnings',
+      'Done with warnings'
+    )
+  }
   switch (status) {
     case 'pending':
       return translate('auto.components.automations.automationPageParts.runStatusPending', 'Queued')

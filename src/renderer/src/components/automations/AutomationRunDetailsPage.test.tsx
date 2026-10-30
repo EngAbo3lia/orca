@@ -53,6 +53,7 @@ function renderPage(viewState: AutomationRunViewState): void {
       onRerun={() => {}}
       onOpenWorkspace={() => {}}
       onBack={() => {}}
+      outputActions={{ load: async () => '', open: () => {}, download: () => {} }}
     />
   )
 }
@@ -108,6 +109,7 @@ describe('AutomationRunDetailsPage', () => {
           onRerun={() => {}}
           onOpenWorkspace={open}
           onBack={() => {}}
+          outputActions={{ load: async () => '', open: () => {}, download: () => {} }}
         />
       )
       fireEvent.click(screen.getByRole('button', { name: 'Ver ejecución' }))

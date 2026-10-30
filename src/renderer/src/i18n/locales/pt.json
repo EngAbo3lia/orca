@@ -14397,7 +14397,8 @@
           "runStatusSkippedMissed": "Ignorada",
           "runStatusSkippedUnavailable": "Indisponível",
           "runStatusSkippedNeedsInteractiveAuth": "Requer credenciais",
-          "runStatusDispatchFailed": "Falhou"
+          "runStatusDispatchFailed": "Falhou",
+          "runStatusCompletedWithWarnings": "Concluído com avisos"
         },
         "runContent": {
           "noOutput": "Nenhum conteúdo de saída disponível."
@@ -14440,6 +14441,20 @@
           "partialFailureOfHosts_one": "Falha ao carregar {{failed}} de {{count}} host",
           "partialFailureOfHosts_other": "Falha ao carregar {{failed}} de {{count}} hosts",
           "partialFailureOfHosts_many": "Falha ao carregar {{failed}} de {{count}} hosts"
+        },
+        "automationRunOutputActions": {
+          "saveFailed": "Não foi possível salvar '{{title}}'."
+        },
+        "AutomationRunResults": {
+          "download": "Baixar",
+          "evidence": "Detalhes",
+          "noWarningsReported": "Nenhum aviso relatado.",
+          "open": "Abrir",
+          "outputs": "Saídas",
+          "previewUnavailable": "Este arquivo não está mais disponível no host.",
+          "resolved": "Resolvido",
+          "resolvedWith": "Resolvido: {{resolution}}",
+          "warnings": "Avisos"
         }
       },
       "TaskPage": {

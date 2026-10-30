@@ -7,7 +7,8 @@ import type { AutomationRunsDashboardEntry } from './automation-runs-dashboard-m
 import {
   formatAutomationDateTimeWithRelative,
   getAutomationRunStatusLabel,
-  getAutomationRunStatusVariant
+  getAutomationRunStatusVariant,
+  hasOpenAutomationRunWarnings
 } from './automation-page-parts'
 
 const RUN_ROW_HEIGHT_PX = 59
@@ -142,8 +143,16 @@ export function AutomationRunsTable({
                         )}
                     </div>
                     <div className="flex items-center justify-between gap-2">
-                      <Badge variant={getAutomationRunStatusVariant(entry.run.status)}>
-                        {getAutomationRunStatusLabel(entry.run.status)}
+                      <Badge
+                        variant={getAutomationRunStatusVariant(
+                          entry.run.status,
+                          hasOpenAutomationRunWarnings(entry.run)
+                        )}
+                      >
+                        {getAutomationRunStatusLabel(
+                          entry.run.status,
+                          hasOpenAutomationRunWarnings(entry.run)
+                        )}
                       </Badge>
                       <ChevronRight className="size-3.5 text-muted-foreground" />
                     </div>

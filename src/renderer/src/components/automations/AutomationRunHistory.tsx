@@ -7,7 +7,8 @@ import type { Worktree } from '../../../../shared/worktree/types'
 import {
   formatAutomationDateTime,
   getAutomationRunStatusLabel,
-  getAutomationRunStatusVariant
+  getAutomationRunStatusVariant,
+  hasOpenAutomationRunWarnings
 } from './automation-page-parts'
 import {
   formatAutomationCost,
@@ -346,8 +347,13 @@ export function AutomationRunHistory({
                           )}
                     </div>
                     <div className="flex justify-start">
-                      <Badge variant={getAutomationRunStatusVariant(run.status)}>
-                        {getAutomationRunStatusLabel(run.status)}
+                      <Badge
+                        variant={getAutomationRunStatusVariant(
+                          run.status,
+                          hasOpenAutomationRunWarnings(run)
+                        )}
+                      >
+                        {getAutomationRunStatusLabel(run.status, hasOpenAutomationRunWarnings(run))}
                       </Badge>
                     </div>
                   </button>

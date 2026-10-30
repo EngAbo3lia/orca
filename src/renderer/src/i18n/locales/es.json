@@ -17574,7 +17574,8 @@
           "runStatusSkippedMissed": "Omitida",
           "runStatusSkippedUnavailable": "No disponible",
           "runStatusSkippedNeedsInteractiveAuth": "Requiere credenciales",
-          "runStatusDispatchFailed": "Fallida"
+          "runStatusDispatchFailed": "Fallida",
+          "runStatusCompletedWithWarnings": "Terminado con advertencias"
         },
         "runContent": {
           "noOutput": "No hay contenido de salida disponible."
@@ -17617,6 +17618,20 @@
           "partialFailureOfHosts_one": "Carga fallida en {{failed}} de {{count}} host",
           "partialFailureOfHosts_other": "Carga fallida en {{failed}} de {{count}} hosts",
           "partialFailureOfHosts_many": "Carga fallida en {{failed}} de {{count}} hosts"
+        },
+        "automationRunOutputActions": {
+          "saveFailed": "No se pudo guardar '{{title}}'."
+        },
+        "AutomationRunResults": {
+          "download": "Descargar",
+          "evidence": "Detalles",
+          "noWarningsReported": "No se informaron advertencias.",
+          "open": "Abrir",
+          "outputs": "Resultados",
+          "previewUnavailable": "Este archivo ya no está disponible en el host.",
+          "resolved": "Resuelto",
+          "resolvedWith": "Resuelto: {{resolution}}",
+          "warnings": "Advertencias"
         }
       },
       "agent": {

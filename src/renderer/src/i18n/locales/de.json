@@ -17680,7 +17680,8 @@
           "runStatusSkippedMissed": "Übersprungen",
           "runStatusSkippedUnavailable": "Nicht verfügbar",
           "runStatusSkippedNeedsInteractiveAuth": "Zugangsdaten erforderlich",
-          "runStatusDispatchFailed": "Fehlgeschlagen"
+          "runStatusDispatchFailed": "Fehlgeschlagen",
+          "runStatusCompletedWithWarnings": "Fertig mit Warnungen"
         },
         "runContent": {
           "noOutput": "Keine Ausgabe verfügbar."
@@ -17721,6 +17722,20 @@
         "hostSummary": {
           "partialFailureOfHosts_one": "Laden fehlgeschlagen: {{failed}} von {{count}} Host",
           "partialFailureOfHosts_other": "Laden fehlgeschlagen: {{failed}} von {{count}} Hosts"
+        },
+        "automationRunOutputActions": {
+          "saveFailed": "'{{title}}' konnte nicht gespeichert werden."
+        },
+        "AutomationRunResults": {
+          "download": "Herunterladen",
+          "evidence": "Details",
+          "noWarningsReported": "Keine Warnungen gemeldet.",
+          "open": "Öffnen",
+          "outputs": "Ausgaben",
+          "previewUnavailable": "Diese Datei ist auf dem Host nicht mehr verfügbar.",
+          "resolved": "Behoben",
+          "resolvedWith": "Behoben: {{resolution}}",
+          "warnings": "Warnungen"
         }
       },
       "agent": {

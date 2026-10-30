@@ -17147,7 +17147,8 @@
           "runStatusSkippedMissed": "건너뜀",
           "runStatusSkippedUnavailable": "사용할 수 없음",
           "runStatusSkippedNeedsInteractiveAuth": "인증 정보 필요",
-          "runStatusDispatchFailed": "실패"
+          "runStatusDispatchFailed": "실패",
+          "runStatusCompletedWithWarnings": "경고와 함께 완료"
         },
         "runContent": {
           "noOutput": "사용 가능한 출력 내용이 없습니다."
@@ -17186,6 +17187,20 @@
         },
         "hostSummary": {
           "partialFailureOfHosts_other": "호스트 {{count}}개 중 {{failed}}개를 불러오지 못했습니다"
+        },
+        "automationRunOutputActions": {
+          "saveFailed": "'{{title}}'을(를) 저장하지 못했습니다."
+        },
+        "AutomationRunResults": {
+          "download": "다운로드",
+          "evidence": "세부 정보",
+          "noWarningsReported": "보고된 경고가 없습니다.",
+          "open": "열기",
+          "outputs": "출력",
+          "previewUnavailable": "이 파일은 더 이상 호스트에서 사용할 수 없습니다.",
+          "resolved": "해결됨",
+          "resolvedWith": "해결됨: {{resolution}}",
+          "warnings": "경고"
         }
       },
       "agent": {
