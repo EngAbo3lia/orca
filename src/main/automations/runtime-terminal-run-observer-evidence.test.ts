@@ -16,6 +16,8 @@ type StatusRow = {
   receivedAt: number
   stateStartedAt: number
   sessionBoundary?: boolean
+  lastAssistantMessage?: string
+  lastAssistantMessageIsToolOutput?: boolean
 }
 
 function createPane(initial: { idle: boolean; tail: string[]; idleEdgeOnly?: boolean }) {
@@ -132,6 +134,37 @@ describe('observing a run with agent evidence', () => {
     pane.becomeIdle()
     await run.promise
     expect(run.settled).toHaveBeenCalledWith(expect.objectContaining({ status: 'completed' }))
+  })
+
+  it("saves the agent's final reply, not the screen with its prompt and chrome", async () => {
+    const pane = createPane({ idle: false, tail: ['=== TASK ===', 'Summarize', '❯', 'status bar'] })
+    const run = observe(pane)
+    await vi.advanceTimersByTimeAsync(1_000)
+    pane.report({ lastAssistantMessage: 'Brief written; Linear was unavailable.' })
+    pane.becomeIdle()
+    await run.promise
+    expect(run.settled).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: 'completed',
+        outputSnapshot: expect.objectContaining({
+          content: 'Brief written; Linear was unavailable.'
+        })
+      })
+    )
+  })
+
+  it('falls back to the screen when the reply is tool output', async () => {
+    const pane = createPane({ idle: false, tail: ['agent screen'] })
+    const run = observe(pane)
+    await vi.advanceTimersByTimeAsync(1_000)
+    pane.report({ lastAssistantMessage: 'npm test output', lastAssistantMessageIsToolOutput: true })
+    pane.becomeIdle()
+    await run.promise
+    expect(run.settled).toHaveBeenCalledWith(
+      expect.objectContaining({
+        outputSnapshot: expect.objectContaining({ content: 'agent screen' })
+      })
+    )
   })
 
   it("waits out a reused pane's previous done until this run's turn is done", async () => {
