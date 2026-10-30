@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Badge } from '@/components/ui/badge'
+import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { AutomationRun } from '../../../../shared/automations-types'
 import { translate } from '@/i18n/i18n'
@@ -131,6 +131,25 @@ export function getAutomationRunStatusLabel(
         'Failed'
       )
   }
+}
+
+/** Fixed-width status columns keep rows aligned; long labels truncate and keep their full text in the title. */
+export function AutomationRunStatusBadge({
+  run
+}: {
+  run: Pick<AutomationRun, 'status' | 'warnings'>
+}): React.JSX.Element {
+  const warned = hasOpenAutomationRunWarnings(run)
+  const label = getAutomationRunStatusLabel(run.status, warned)
+  return (
+    <Badge
+      variant={getAutomationRunStatusVariant(run.status, warned)}
+      className="max-w-full"
+      title={label}
+    >
+      <span className="truncate">{label}</span>
+    </Badge>
+  )
 }
 
 export const AUTOMATION_EDITOR_SECTION_LABEL_CLASS =
