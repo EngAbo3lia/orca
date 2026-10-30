@@ -3,6 +3,7 @@ import {
   type OrchestrationCliCommand
 } from '../runtime/orchestration/cli-command'
 import { isWslUncPath } from '../../shared/wsl-paths'
+import { getRepoRoutingConnectionId } from '../../shared/execution-host'
 import type { AutomationRunTargetResult } from './run-target-resolution'
 
 /** Same verbs on every surface; only the executable varies, as in the orchestration preamble. */
@@ -16,7 +17,8 @@ commands below to report to it. They apply to the current run automatically.
   # The result will be incomplete: a source was unavailable, checks were not run,
   # or you used an allowed lower-quality fallback. Report it as soon as you know.
   # Reuse the same --key for the same problem; do not create a new key per retry.
-  ${cli} automations warn --key "<short-id>" --message "<what is missing>" --impact "<why it matters>" --evidence "<relevant error output>"
+  # Keep error output in a file; --evidence-file sends its last lines without shell quoting.
+  ${cli} automations warn --key "<short-id>" --message "<what is missing>" --impact "<why it matters>" --evidence-file "<log path>"
 
   # The missing work later succeeded in this run:
   ${cli} automations warn --key "<short-id>" --resolve --message "<what recovered>"
@@ -41,7 +43,7 @@ export function automationRunReportingCli(
   target: Extract<AutomationRunTargetResult, { ok: true }>,
   readWslDistro: () => string | undefined
 ): OrchestrationCliCommand | null {
-  if (target.repo.connectionId || isWslUncPath(target.cwd)) {
+  if (getRepoRoutingConnectionId(target.repo) || isWslUncPath(target.cwd)) {
     return null
   }
   try {

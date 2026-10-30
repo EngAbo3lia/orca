@@ -55,6 +55,20 @@ describe('resolveCallerAutomationRun', () => {
     ).toThrow(AutomationRunCallerError)
   })
 
+  it('holds reports while a reused session is starting its next run', () => {
+    const runs = [
+      terminalRun('older', { status: 'completed', finishedAt: 5 }),
+      terminalRun('next', {
+        status: 'dispatching',
+        createdAt: 8,
+        terminalPaneKey: null,
+        terminalPtyId: null
+      })
+    ]
+
+    expect(() => resolveCallerAutomationRun(runs, session, 10)).toThrow(/still starting/)
+  })
+
   it('refuses a pane whose PTY was replaced since the run launched', () => {
     expect(() =>
       resolveCallerAutomationRun([terminalRun('r1')], { ...session, ptyId: 'pty-2' }, 2)

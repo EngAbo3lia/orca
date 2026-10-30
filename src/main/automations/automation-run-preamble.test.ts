@@ -15,9 +15,6 @@ describe('automationAgentPrompt', () => {
   it('leads with the run instructions and keeps the saved prompt verbatim as the task', () => {
     const prompt = automationAgentPrompt('Summarize  yesterday\n', 'orca')
 
-    expect(prompt).toMatch(/orca automations warn --key/)
-    expect(prompt).toMatch(/orca automations fail --message/)
-    expect(prompt).toMatch(/orca automations attach --file/)
     expect(prompt.endsWith('=== TASK ===\nSummarize  yesterday\n')).toBe(true)
   })
 

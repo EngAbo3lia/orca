@@ -9,6 +9,9 @@ export const NOT_IN_AUTOMATION_RUN_MESSAGE =
 export const REMOTE_TERMINAL_UNSUPPORTED_MESSAGE =
   'Reporting automation results from WSL or SSH terminals is not supported yet.'
 
+export const AUTOMATION_RUN_STARTING_MESSAGE =
+  'This automation run is still starting. Retry the command in a few seconds.'
+
 export class AutomationRunCallerError extends Error {
   readonly code = 'automation_run_caller_unknown'
 }
@@ -81,6 +84,18 @@ export function resolveCallerAutomationRun(
     )[0]
   if (!run || !acceptsReports(run, now)) {
     throw new AutomationRunCallerError(NOT_IN_AUTOMATION_RUN_MESSAGE)
+  }
+  // A reused session's next run records its pane only after the prompt lands; never credit the last one.
+  if (
+    isFinalAutomationRunStatus(run.status) &&
+    runs.some(
+      (entry) =>
+        entry.automationId === run.automationId &&
+        entry.createdAt > run.createdAt &&
+        (entry.status === 'dispatching' || entry.status === 'pending')
+    )
+  ) {
+    throw new AutomationRunCallerError(AUTOMATION_RUN_STARTING_MESSAGE)
   }
   return run
 }

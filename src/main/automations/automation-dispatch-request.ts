@@ -139,10 +139,13 @@ export async function requestAutomationDispatch(
     return refuse(stopped)
   }
   const dispatchTarget = target
-  const reportingCli = automationRunReportingCli(
-    dispatchTarget,
-    () => getLocalProjectWorktreeGitOptions(ctx.store, dispatchTarget.repo).wslDistro
-  )
+  // An empty task would leave the agent with instructions and nothing to do.
+  const reportingCli = !automation.prompt.trim()
+    ? null
+    : automationRunReportingCli(
+        dispatchTarget,
+        () => getLocalProjectWorktreeGitOptions(ctx.store, dispatchTarget.repo).wslDistro
+      )
   const agentPrompt = automationAgentPrompt(automation.prompt, reportingCli)
   await ctx.runs.updateRun({
     runId: run.id,
