@@ -3784,14 +3784,33 @@ body:has([data-contextual-tour-target='tab-create-menu'][data-state='open'])
   }
 }
 
-/* ── Mobile responsive: collapse settings sidebar ───────────────────────── */
+/* ── Mobile responsive: settings shell ──────────────────────────────────── */
 @media (max-width: 768px) {
+  .settings-view-shell {
+    flex-direction: column !important;
+  }
   .settings-view-shell aside {
-    display: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    flex: 0 0 auto !important;
+  }
+  .settings-view-shell aside > div {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
   .settings-view-shell .mx-auto {
     padding-left: 1rem !important;
     padding-right: 1rem !important;
+    max-width: 100% !important;
+  }
+  /* Cards and panels: full width, reduced padding */
+  .settings-view-shell .rounded-xl {
+    padding: 1rem !important;
+  }
+  .settings-view-shell [class*="max-w-"] {
+    max-width: 100% !important;
   }
 }
 
