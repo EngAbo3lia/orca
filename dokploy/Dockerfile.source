@@ -19,7 +19,8 @@ RUN git clone --depth 1 --branch ${ORCA_BRANCH} ${ORCA_REPO} .
 
 # Install deps (frozen lockfile). Native module failures are tolerated via
 # --ignore-scripts where possible; build:web only needs workspace packages.
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm run build:packages
 
 RUN pnpm run build:packages && node config/scripts/run-vite-web-build.mjs
 
