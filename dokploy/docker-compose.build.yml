@@ -1,0 +1,80 @@
+# ─── Dokploy variant that builds the image from this repository ──────────────
+# Use this when you do not want to publish to GHCR and Dokploy can build from
+# source. The compose file must be reachable from the clone root, so set the
+# Dokploy compose path to dokploy/docker-compose.build.yml.
+#
+# Required environment:
+#   ORCA_PAIRING_ADDRESS       wss://orca.majra.dev
+#   ORCA_APPIMAGE_SHA512       sha512 from the matching release's
+#                              latest-linux.yml (see dokploy/README.md)
+#
+# This build downloads a ~245 MB AppImage and installs three npm agent CLIs on
+# every deploy. Prefer docker-compose.dokploy.yml plus a prebuilt image for
+# routine releases.
+# ────────────────────────────────────────────────────────────────────────────
+
+name: orca
+
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        ORCA_VERSION: ${ORCA_VERSION:-1.4.239}
+        ORCA_APPIMAGE_SHA512: ${ORCA_APPIMAGE_SHA512:?Set ORCA_APPIMAGE_SHA512}
+        OPENCODE_VERSION: ${OPENCODE_VERSION:-1.19.4}
+        CLAUDE_CODE_VERSION: ${CLAUDE_CODE_VERSION:-2.1.310}
+        CODEX_VERSION: ${CODEX_VERSION:-0.164.0}
+    image: orca-server:${ORCA_VERSION:-local}
+    pull_policy: build
+    restart: unless-stopped
+    init: true
+    environment:
+      TZ: ${TZ:-Africa/Cairo}
+      ORCA_PORT: "6768"
+      ORCA_PAIRING_ADDRESS: ${ORCA_PAIRING_ADDRESS:?Set ORCA_PAIRING_ADDRESS}
+      ORCA_MOBILE_PAIRING: ${ORCA_MOBILE_PAIRING:-false}
+      ORCA_GRANT_DESKTOP_CONTROL: ${ORCA_GRANT_DESKTOP_CONTROL:-false}
+      ORCA_PROJECT_ROOT: ${ORCA_PROJECT_ROOT:-}
+      ORCA_EXTRA_ARGS: ${ORCA_EXTRA_ARGS:-}
+      GIT_AUTHOR_NAME: ${GIT_AUTHOR_NAME:-Orca Agent}
+      GH_TOKEN: ${GH_TOKEN:-}
+      GIT_AUTHOR_EMAIL: ${GIT_AUTHOR_EMAIL:-orca@majra.dev}
+      GIT_COMMITTER_NAME: ${GIT_AUTHOR_NAME:-Orca Agent}
+      GIT_COMMITTER_EMAIL: ${GIT_AUTHOR_EMAIL:-orca@majra.dev}
+    expose:
+      - "6768"
+    volumes:
+      - orca_home:/home/orca
+      - orca_repos:/repos
+    shm_size: "1gb"
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - >-
+          const net=require('net');
+          const s=net.connect(6768,'127.0.0.1',()=>{s.end();process.exit(0)});
+          s.on('error',()=>process.exit(1));
+          s.setTimeout(3000,()=>process.exit(1));
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 900s
+    deploy:
+      resources:
+        limits:   { cpus: '2.0', memory: 6G }
+        reservations: { cpus: '0.5', memory: 1G }
+
+volumes:
+  orca_home:
+  orca_repos:

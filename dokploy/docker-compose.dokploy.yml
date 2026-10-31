@@ -1,0 +1,88 @@
+# ─── Dokploy / Orca Remote Server (image-only, no source required) ────────────
+# Pulls the prebuilt image from GHCR. Build it with dokploy/build.ps1 or the
+# GitHub workflow before the first deploy.
+#
+# Required environment (set in Dokploy → Environment):
+#   ORCA_PAIRING_ADDRESS   public endpoint clients should dial, e.g.
+#                          wss://orca.majra.dev   (required)
+#
+# Optional environment:
+#   APP_VERSION            image tag (default latest)
+#   REGISTRY               ghcr.io/<owner> (default ghcr.io/engabo3lia)
+#   ORCA_MOBILE_PAIRING    true → print a mobile-scoped pairing link
+#   ORCA_GRANT_DESKTOP_CONTROL  true → allow paired clients to drive the
+#                               container desktop (rarely useful headless)
+#   ORCA_PROJECT_ROOT      default project root for new sessions
+#   ORCA_EXTRA_ARGS        extra `orca serve` flags, space separated
+#   TZ                     container timezone (default Africa/Cairo)
+#   GIT_AUTHOR_NAME / GIT_AUTHOR_EMAIL  commit identity used by agents
+#
+# Domain rule in Dokploy (do not set https at origin):
+#   host orca.majra.dev · path / · port 6768 · service server · https false
+#   certificate none
+#
+# GHCR auth: add a token with read:packages as the registry credential in
+# Dokploy → Settings → Registry when the package is private.
+# ────────────────────────────────────────────────────────────────────────────
+
+name: orca
+
+services:
+  server:
+    image: ${REGISTRY:-ghcr.io/engabo3lia}/orca-server:${APP_VERSION:-latest}
+    container_name: orca_server
+    pull_policy: always
+    restart: unless-stopped
+    init: true
+    hostname: orca-server
+    environment:
+      TZ: ${TZ:-Africa/Cairo}
+      ORCA_PORT: "6768"
+      ORCA_PAIRING_ADDRESS: ${ORCA_PAIRING_ADDRESS:?Set ORCA_PAIRING_ADDRESS}
+      ORCA_MOBILE_PAIRING: ${ORCA_MOBILE_PAIRING:-false}
+      ORCA_GRANT_DESKTOP_CONTROL: ${ORCA_GRANT_DESKTOP_CONTROL:-false}
+      ORCA_PROJECT_ROOT: ${ORCA_PROJECT_ROOT:-}
+      ORCA_EXTRA_ARGS: ${ORCA_EXTRA_ARGS:-}
+      GIT_AUTHOR_NAME: ${GIT_AUTHOR_NAME:-Orca Agent}
+      GH_TOKEN: ${GH_TOKEN:-}
+      GIT_AUTHOR_EMAIL: ${GIT_AUTHOR_EMAIL:-orca@majra.dev}
+      GIT_COMMITTER_NAME: ${GIT_AUTHOR_NAME:-Orca Agent}
+      GIT_COMMITTER_EMAIL: ${GIT_AUTHOR_EMAIL:-orca@majra.dev}
+    expose:
+      - "6768"
+    volumes:
+      # Profile, agent credentials, SSH keys, caches, and the orcad Node cache.
+      - orca_home:/home/orca
+      # Repos the agents work on. Clone into this volume, or replace this line
+      # with a bind mount such as /srv/orca/repos:/repos.
+      - orca_repos:/repos
+    shm_size: "1gb"
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - >-
+          const net=require('net');
+          const s=net.connect(6768,'127.0.0.1',()=>{s.end();process.exit(0)});
+          s.on('error',()=>process.exit(1));
+          s.setTimeout(3000,()=>process.exit(1));
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 600s
+    deploy:
+      resources:
+        limits:   { cpus: '2.0', memory: 6G }
+        reservations: { cpus: '0.5', memory: 1G }
+
+volumes:
+  orca_home:
+  orca_repos:
