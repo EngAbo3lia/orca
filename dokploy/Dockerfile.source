@@ -12,14 +12,14 @@ ARG ORCA_BRANCH=main
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g pnpm@9 --no-fund --no-audit
+RUN npm install -g pnpm@12.14.0 --no-fund --no-audit
 
 WORKDIR /src
 RUN git clone --depth 1 --branch ${ORCA_BRANCH} ${ORCA_REPO} .
 
 # Install deps (frozen lockfile). Native module failures are tolerated via
 # --ignore-scripts where possible; build:web only needs workspace packages.
-RUN pnpm install --frozen-lockfile --ignore-scripts 2>&1 | tail -20 || pnpm install --ignore-scripts
+RUN pnpm install --frozen-lockfile
 
 RUN pnpm run build:packages && node config/scripts/run-vite-web-build.mjs
 
