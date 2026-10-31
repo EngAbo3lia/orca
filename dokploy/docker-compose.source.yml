@@ -1,0 +1,42 @@
+name: orca
+
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile.source
+      args:
+        ORCA_REPO: https://github.com/EngAbo3lia/orca.git
+        ORCA_BRANCH: main
+        ORCA_VERSION: ${ORCA_VERSION:-1.4.245}
+        ORCA_APPIMAGE_SHA512: ${ORCA_APPIMAGE_SHA512:?Set ORCA_APPIMAGE_SHA512}
+        OPENCODE_VERSION: ${OPENCODE_VERSION:-1.19.4}
+        CLAUDE_CODE_VERSION: ${CLAUDE_CODE_VERSION:-2.1.310}
+        CODEX_VERSION: ${CODEX_VERSION:-0.164.0}
+    image: orca-server:${ORCA_VERSION:-source}
+    pull_policy: build
+    restart: unless-stopped
+    init: true
+    environment:
+      TZ: ${TZ:-Africa/Cairo}
+      ORCA_PORT: "6768"
+      ORCA_PAIRING_ADDRESS: ${ORCA_PAIRING_ADDRESS:?Set ORCA_PAIRING_ADDRESS}
+      ORCA_MOBILE_PAIRING: ${ORCA_MOBILE_PAIRING:-false}
+      ORCA_GRANT_DESKTOP_CONTROL: ${ORCA_GRANT_DESKTOP_CONTROL:-false}
+      ORCA_PROJECT_ROOT: ${ORCA_PROJECT_ROOT:-}
+      ORCA_EXTRA_ARGS: ${ORCA_EXTRA_ARGS:-}
+    volumes:
+      - orca_home:/home/orca
+      - orca_repos:/repos
+    ports:
+      - "6768:6768"
+    healthcheck:
+      test: ["CMD", "node", "-e", "const net=require('net');const s=net.connect(6768,'127.0.0.1',()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1));s.setTimeout(3000,()=>process.exit(1));"]
+      interval: 30s
+      timeout: 5s
+      start_period: 600s
+      retries: 5
+
+volumes:
+  orca_home:
+  orca_repos:

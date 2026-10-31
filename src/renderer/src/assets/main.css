@@ -3784,6 +3784,17 @@ body:has([data-contextual-tour-target='tab-create-menu'][data-state='open'])
   }
 }
 
+/* ── Mobile responsive: collapse settings sidebar ───────────────────────── */
+@media (max-width: 768px) {
+  .settings-view-shell aside {
+    display: none !important;
+  }
+  .settings-view-shell .mx-auto {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
 /* ── Mobile responsive safety net (global) ──────────────────────────────── */
 html {
   -webkit-text-size-adjust: 100%;
