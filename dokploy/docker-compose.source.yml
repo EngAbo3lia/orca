@@ -8,7 +8,7 @@ services:
       args:
         ORCA_REPO: https://github.com/EngAbo3lia/orca.git
         ORCA_BRANCH: main
-        ORCA_VERSION: ${ORCA_VERSION:-1.4.245}
+        ORCA_VERSION: ${ORCA_VERSION:-1.4.250}
         ORCA_APPIMAGE_SHA512: ${ORCA_APPIMAGE_SHA512:?Set ORCA_APPIMAGE_SHA512}
         OPENCODE_VERSION: ${OPENCODE_VERSION:-1.19.4}
         CLAUDE_CODE_VERSION: ${CLAUDE_CODE_VERSION:-2.1.310}
