@@ -5,6 +5,11 @@
 # data embedded. Read them with `compose.readLogs` / `docker logs`.
 set -euo pipefail
 
+# Clear a stale orcad instance lock left by a previous container. The data root
+# lives in the persisted orca_home volume and the old pid is never reachable
+# from a recreated container, so the lock is always stale here.
+rm -f /home/orca/.config/orca/orcad.lock
+
 port="${ORCA_PORT:-6768}"
 pairing_address="${ORCA_PAIRING_ADDRESS:-}"
 
